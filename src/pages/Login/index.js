@@ -71,14 +71,9 @@ const Login = () => {
               <StyledLabel>Senha</StyledLabel>
             </InputBox>
 
-            <Forget>
-              <label>
-                <input type="checkbox" /> Lembrar
-              </label>
-              <a href="#">Esqueci minha senha</a>
-            </Forget>
-
-            <Button type="submit">Log in</Button>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Button type="submit">Log in</Button>
+            </div>
 
             <Register>
               <p>Não tenho uma conta <Link to="/register">Registrar-se</Link></p>

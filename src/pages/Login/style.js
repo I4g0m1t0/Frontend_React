@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { IonIcon } from "@ionic/react";
+import backgroundImage from './imagem.jpg';
 
 export const Container = styled.section`
   display: flex;
@@ -7,8 +8,7 @@ export const Container = styled.section`
   align-items: center;
   min-height: 100vh;
   width: 100%;
-  background: black;
-  /*background: url("/images/imagem.jpg") no-repeat center center/cover;*/
+  background: url(${backgroundImage}) no-repeat center center/cover;
   font-family: "Poppins", sans-serif;
 `;
 
@@ -99,7 +99,7 @@ export const Forget = styled.div`
 `;
 
 export const Button = styled.button`
-  width: 100%;
+  width: 80%;
   height: 40px;
   border-radius: 40px;
   background: #fff;

@@ -1,7 +1,21 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Title, Form } from "./style";
+import {
+  Container,
+  FormBox,
+  FormValue,
+  Title,
+  InputBox,
+  StyledInput,
+  StyledLabel,
+  Icon,
+  Button,
+  Login,
+  ErrorMessage,
+} from "./style"; // Ajuste o caminho conforme necessário
+import { mailOutline, lockClosedOutline, personOutline } from "ionicons/icons";
 import api from "../../services/api";
+
 const Register = () => {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
@@ -21,28 +35,61 @@ const Register = () => {
       setError("Houve um problema ao cadastrar. Tente novamente.");
     }
   };
+
   return (
     <Container>
-      <Title>Criar Conta</Title>
-      <Form onSubmit={handleSignUp}>
-        <input
-          type="string"
-          placeholder="Nome"
-          onChange={(e) => setNome(e.target.value)}
-        />
-        <input
-          type="email"
-          placeholder="Endereço de Email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Senha"
-          onChange={(e) => setSenha(e.target.value)}
-        />
-        <button type="submit">Cadastrar</button>
-        {error && <p>{error}</p>}
-      </Form>
+      <FormBox>
+        <FormValue>
+          <form onSubmit={handleSignUp}>
+            <Title>Cadastre-se</Title>
+
+            <InputBox>
+              <StyledInput
+                type="text"
+                required
+                value={nome}
+                onChange={(e) => setNome(e.target.value)}
+              />
+              <StyledLabel>Nome</StyledLabel>
+              <Icon icon={personOutline} />
+            </InputBox>
+
+            <InputBox>
+              <StyledInput
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <StyledLabel>Email</StyledLabel>
+              <Icon icon={mailOutline} />
+            </InputBox>
+
+            <InputBox>
+              <StyledInput
+                type="password"
+                required
+                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
+              />
+              <StyledLabel>Senha</StyledLabel>
+              <Icon icon={lockClosedOutline} />
+            </InputBox>
+
+            {error && <ErrorMessage>{error}</ErrorMessage>}
+            
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <Button type="submit">Cadastrar</Button>
+            </div>
+
+            <Login>
+              <p>
+                Já tem uma conta? <a href="/login">Log in</a>
+              </p>
+            </Login>
+          </form>
+        </FormValue>
+      </FormBox>
     </Container>
   );
 };
