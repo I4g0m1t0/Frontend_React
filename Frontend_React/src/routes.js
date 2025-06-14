@@ -12,6 +12,8 @@ import { isAuthenticated } from "./services/auth";
 import Sidebar from "./components/Sidebar";
 import Products from "./pages/Products";
 import Orders from "./pages/Orders";
+import Categories from "./pages/Categories";
+
 
 const MainPage = () => <Main />;
 const LoginPage = () => <Login />;
@@ -35,6 +37,7 @@ const Rotas = () => (
             <Route path="/app" element={<AppPage />} />
             <Route path='/register' element={<Register />} />
             <Route path='/products' element={<Products />} />
+            <Route path='/categories' element={<Categories />} />
             <Route path='/orders' element={<Orders />} />
             <Route path="*" element={<NotFoundPage />} />
         </Routes>

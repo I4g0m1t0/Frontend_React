@@ -4,12 +4,14 @@ import api from "../../services/api";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
     loadProducts();
+    loadCategories();
   }, []);
 
   const loadProducts = async () => {
@@ -18,6 +20,15 @@ const Products = () => {
       setProducts(response.data);
     } catch (err) {
       setError("Erro ao carregar produtos");
+    }
+  };
+
+  const loadCategories = async () => {
+    try {
+      const response = await api.get("/categories");
+      setCategories(response.data);
+    } catch (err) {
+      setError("Erro ao carregar categorias");
     }
   };
 
@@ -52,6 +63,7 @@ const Products = () => {
           <tr>
             <th>Nome</th>
             <th>Preço</th>
+            <th>Categoria</th>
             <th>Ações</th>
           </tr>
         </thead>
@@ -59,14 +71,16 @@ const Products = () => {
           {products.map((product) => (
             <tr key={product.id}>
               <td>{product.name}</td>
-              <td>R$ {product.price}</td>
+              <td>R$ {(Number(product.price) || 0).toFixed(2)}</td>
               <td>
-                <button onClick={() => handleEditProduct(product)}>
-                  Editar
-                </button>
-                <button onClick={() => handleDeleteProduct(product.id)}>
-                  Excluir
-                </button>
+                {
+                  categories.find((cat) => cat.id === product.categoryId)?.name ||
+                  "Sem categoria"
+                }
+              </td>
+              <td>
+                <button onClick={() => handleEditProduct(product)}>Editar</button>
+                <button onClick={() => handleDeleteProduct(product.id)}>Excluir</button>
               </td>
             </tr>
           ))}
@@ -77,14 +91,18 @@ const Products = () => {
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
           product={currentProduct}
-          onProductSaved={loadProducts}
+          categories={categories}
+          onProductSaved={() => {
+            loadProducts();
+            setIsModalOpen(false);
+          }}
         />
       )}
     </Container>
   );
 };
 
-const ProductModal = ({ isOpen, onClose, product, onProductSaved }) => {
+const ProductModal = ({ isOpen, onClose, product, categories, onProductSaved }) => {
   const [formData, setFormData] = useState({
     nome: "",
     valor: "",
@@ -137,7 +155,6 @@ const ProductModal = ({ isOpen, onClose, product, onProductSaved }) => {
         await api.post("/products", productData);
       }
       onProductSaved();
-      onClose();
     } catch (err) {
       setError("Erro ao salvar produto");
     }
@@ -171,9 +188,11 @@ const ProductModal = ({ isOpen, onClose, product, onProductSaved }) => {
             onChange={handleChange}
           >
             <option value="">Selecione a categoria</option>
-            <option value="1">Bebidas</option>
-            <option value="2">Lanches</option>
-            <option value="3">Sobremesas</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
           </select>
           {error && <p style={{ color: "red" }}>{error}</p>}
           <div className="button-group">
