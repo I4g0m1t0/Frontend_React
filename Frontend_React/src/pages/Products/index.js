@@ -57,14 +57,14 @@ const Products = () => {
         </thead>
         <tbody>
           {products.map((product) => (
-            <tr key={product.idproduto}>
-              <td>{product.nome}</td>
-              <td>R$ {product.valor}</td>
+            <tr key={product.id}>
+              <td>{product.name}</td>
+              <td>R$ {product.price}</td>
               <td>
                 <button onClick={() => handleEditProduct(product)}>
                   Editar
                 </button>
-                <button onClick={() => handleDeleteProduct(product.idproduto)}>
+                <button onClick={() => handleDeleteProduct(product.id)}>
                   Excluir
                 </button>
               </td>
@@ -95,9 +95,9 @@ const ProductModal = ({ isOpen, onClose, product, onProductSaved }) => {
   useEffect(() => {
     if (product) {
       setFormData({
-        nome: product.nome,
-        valor: product.valor,
-        categoria: product.categoriaId || "",
+        nome: product.name,
+        valor: product.price,
+        categoria: product.categoryId || "",
       });
     } else {
       setFormData({
@@ -132,7 +132,7 @@ const ProductModal = ({ isOpen, onClose, product, onProductSaved }) => {
 
     try {
       if (product) {
-        await api.put(`/products/${product.idproduto}`, productData);
+        await api.put(`/products/${product.id}`, productData);
       } else {
         await api.post("/products", productData);
       }
