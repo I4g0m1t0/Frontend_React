@@ -12,12 +12,13 @@ import { isAuthenticated } from "./services/auth";
 import Sidebar from "./components/Sidebar";
 import Products from "./pages/Products";
 import Orders from "./pages/Orders";
+import Categories from "./pages/Categories";
 
 const MainPage = () => <Main />;
 const LoginPage = () => <Login />;
 const LogoutPage = () => <Logout />;
 const NotFoundPage = () => <NotFound />;
-const RegisterPage = () => <Register /> 
+const RegisterPage = () => <Register />     
 const AppPage = () => {
     if (!isAuthenticated()) {
         return <Navigate to="/" replace />;
@@ -34,6 +35,7 @@ const Rotas = () => (
             <Route path="/logout" element={<LogoutPage />} />
             <Route path="/app" element={<AppPage />} />
             <Route path='/register' element={<Register />} />
+            <Route path='/categories' element={<Categories />} />
             <Route path='/products' element={<Products />} />
             <Route path='/orders' element={<Orders />} />
             <Route path="*" element={<NotFoundPage />} />

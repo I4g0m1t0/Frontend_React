@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   Container,
   FormBox,
@@ -84,7 +84,7 @@ const Register = () => {
 
             <Login>
               <p>
-                Já tem uma conta? <a href="/login">Log in</a>
+                Já tem uma conta? <Link to="/login">Log in</Link>
               </p>
             </Login>
           </form>

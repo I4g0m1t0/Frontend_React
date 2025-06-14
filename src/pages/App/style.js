@@ -5,6 +5,7 @@ export const Container = styled.div`
     min-height: 100vh;
     font-family: Arial, sans-serif;
     text-align: center;
+    margin-top: 60px;
 `;
 
 export const Title = styled.h2`
