@@ -1,0 +1,26 @@
+# Node modules
+node_modules/
+
+# # Environment variables
+# .env
+
+# # Logs
+# *.log
+# logs
+# npm-debug.log*
+# yarn-debug.log*
+# yarn-error.log*
+
+# # Dependency directories
+# jspm_packages/
+
+# # IDE specific files
+# .vscode/
+# .idea/
+
+# # System files
+# .DS_Store
+# Thumbs.db
+
+# # Readme
+# Readme.md 
