@@ -99,6 +99,7 @@ router.get('/:id', orderController.getById);
  *       '404':
  *         description: Pedido não encontrado
  */
+
 router.delete('/:id', orderController.cancelOrder);
 
 module.exports = router;

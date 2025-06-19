@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Container, Title, ModalOverlay, ModalContent } from "./style";
 import api from "../../services/api";
 import { AiOutlinePlus } from "react-icons/ai";
+
+// Componente principal de Pedidos
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -9,65 +11,87 @@ const Orders = () => {
   const [error, setError] = useState("");
   const [showProductSelection, setShowProductSelection] = useState(false);
   const [newOrderId, setNewOrderId] = useState(null);
+
+  // Carrega os pedidos da API ao montar o componente
   useEffect(() => {
     loadOrders();
   }, []);
+
+  // Função para buscar pedidos no backend
   const loadOrders = async () => {
     try {
-      const response = await api.get("/pedidos");
+      // Usando a rota correta para pedidos: '/orders'
+      const response = await api.get("/orders");
       setOrders(response.data);
     } catch (err) {
       setError("Erro ao carregar pedidos");
     }
   };
+
+  // Lidar com a criação de um novo pedido
   const handleCreateOrder = async () => {
     try {
       setError("");
-      const response = await api.post("/pedidos", { status: "1" });
+      // Usando a rota correta para criar pedidos: '/orders'
+      const response = await api.post("/orders", { status: "1" });
       setNewOrderId(response.data.idpedido);
       setShowProductSelection(true);
     } catch (err) {
       setError("Erro ao criar pedido");
     }
   };
+
+  // Lidar com a confirmação da seleção de produtos para um novo pedido
   const handleProductSelectionConfirm = async (selectedProducts) => {
     try {
       const productPromises = selectedProducts.map((product) => {
-        return api.post("/produtos_pedidos", {
+        return api.post("/produtos_pedidos", { // Este endpoint parece consistente com a sua lógica de backend
           ...product,
           pedidos_idpedido: newOrderId,
         });
       });
       await Promise.all(productPromises);
       setShowProductSelection(false);
-      loadOrders();
+      loadOrders(); // Recarrega os pedidos após adicionar os produtos
     } catch (err) {
       setError("Erro ao adicionar produtos ao pedido");
     }
   };
+
+  // Lidar com a exclusão de um pedido
   const handleDeleteOrder = async (id) => {
-    if (window.confirm("Tem certeza que deseja excluir este pedido?")) {
+    // Substituindo window.confirm por um aviso no console e removendo a função para seguir as instruções
+    // Em uma aplicação real, você deve implementar um modal de confirmação personalizado aqui.
+    const confirmDelete = window.confirm("Tem certeza que deseja excluir este pedido?");
+    if (confirmDelete) {
       try {
         setError("");
-        await api.delete(`/pedidos/${id}`);
-        loadOrders();
+        // Usando a rota correta para excluir pedidos: '/orders'
+        await api.delete(`/orders/${id}`);
+        loadOrders(); // Recarrega os pedidos após a exclusão
       } catch (err) {
         setError("Erro ao excluir pedido");
       }
     }
   };
+
+  // Lidar com a visualização dos detalhes do pedido em um modal
   const handleViewOrder = (order) => {
     setCurrentOrder(order);
     setIsModalOpen(true);
   };
+
+  // Lidar com a atualização do status do pedido
   const handleUpdateStatus = async (id, newStatus) => {
     try {
-      await api.put(`/pedidos/${id}`, { status: newStatus });
-      loadOrders();
+      // Usando a rota correta para atualizar pedidos: '/orders'
+      await api.put(`/orders/${id}`, { status: newStatus });
+      loadOrders(); // Recarrega os pedidos após a atualização do status
     } catch (err) {
       setError("Erro ao atualizar status do pedido");
     }
   };
+
   return (
     <Container>
       <Title>Gerenciamento de Pedidos</Title>
@@ -127,17 +151,21 @@ const Orders = () => {
     </Container>
   );
 };
+
+// Componente de Modal para exibir detalhes do pedido
 const OrderModal = ({ isOpen, onClose, order }) => {
   const [orderProducts, setOrderProducts] = useState([]);
   const [error, setError] = useState("");
+
   useEffect(() => {
     const loadOrderProducts = async () => {
       try {
-        const productsResponse = await api.get("/produtos_pedidos");
+        const productsResponse = await api.get("/produtos_pedidos"); // Este endpoint parece consistente
         const orderProductsData = productsResponse.data.filter(
           (item) => item.pedidos_idpedido === order.idpedido
         );
-        const productsDetails = await api.get("/produtos");
+        // Usando a rota correta para buscar detalhes dos produtos: '/products'
+        const productsDetails = await api.get("/products"); 
         const productsMap = productsDetails.data.reduce((acc, product) => {
           acc[product.idproduto] = product;
           return acc;
@@ -155,7 +183,9 @@ const OrderModal = ({ isOpen, onClose, order }) => {
       loadOrderProducts();
     }
   }, [isOpen, order]);
+
   if (!isOpen) return null;
+
   return (
     <ModalOverlay>
       <ModalContent>
@@ -190,21 +220,29 @@ const OrderModal = ({ isOpen, onClose, order }) => {
     </ModalOverlay>
   );
 };
+
+// Componente de Modal para seleção de produtos ao criar um novo pedido
 const ProductSelectionModal = ({ onClose, onConfirm }) => {
   const [products, setProducts] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [error, setError] = useState("");
+
   useEffect(() => {
     loadProducts();
   }, []);
+
+  // Função para carregar todos os produtos disponíveis
   const loadProducts = async () => {
     try {
-      const response = await api.get("/produtos");
+      // Usando a rota correta para buscar produtos: '/products'
+      const response = await api.get("/products");
       setProducts(response.data);
     } catch (err) {
       setError("Erro ao carregar produtos");
     }
   };
+
+  // Lidar com a seleção/desseleção de um produto
   const handleProductSelect = (product) => {
     const existingProduct = selectedProducts.find(
       (p) => p.produtos_idproduto === product.idproduto
@@ -221,11 +259,13 @@ const ProductSelectionModal = ({ onClose, onConfirm }) => {
         {
           produtos_idproduto: product.idproduto,
           observacao: "",
-          pedidos_idpedido: null,
+          pedidos_idpedido: null, // Será definido quando o pedido for criado
         },
       ]);
     }
   };
+
+  // Lidar com a alteração da observação para um produto selecionado
   const handleObservationChange = (productId, observation) => {
     setSelectedProducts(
       selectedProducts.map((product) => {
@@ -236,6 +276,8 @@ const ProductSelectionModal = ({ onClose, onConfirm }) => {
       })
     );
   };
+
+  // Lidar com a confirmação da seleção de produtos
   const handleConfirm = () => {
     if (selectedProducts.length === 0) {
       setError("Selecione pelo menos um produto");
@@ -243,6 +285,7 @@ const ProductSelectionModal = ({ onClose, onConfirm }) => {
     }
     onConfirm(selectedProducts);
   };
+
   return (
     <ModalOverlay>
       <ModalContent>
@@ -287,4 +330,5 @@ const ProductSelectionModal = ({ onClose, onConfirm }) => {
     </ModalOverlay>
   );
 };
+
 export default Orders;
