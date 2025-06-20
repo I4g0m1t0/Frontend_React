@@ -102,4 +102,6 @@ router.get('/:id', orderController.getById);
 
 router.delete('/:id', orderController.cancelOrder);
 
+router.patch('/:id/status', orderController.updateStatus);
+
 module.exports = router;

@@ -13,9 +13,16 @@ const Order = db.define('orders', {
     type: Sequelize.INTEGER,
     allowNull: false,
     references: { model: User, key: 'id' }
+  },
+  status: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    defaultValue: 'ativo'   // valores típicos: 'ativo', 'cancelado', 'pago', 'enviado'
   }
 }, {
-  freezeTableName: true
+  freezeTableName: true,
+  timestamps: true
 });
+
 
 module.exports = Order;

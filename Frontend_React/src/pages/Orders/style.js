@@ -3,6 +3,7 @@ export const Container = styled.div`
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+  margin-top: 60px;
   .create-order-btn {
     padding: 12px 24px;
     margin-bottom: 20px;

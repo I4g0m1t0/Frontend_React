@@ -1,57 +1,70 @@
 import styled from "styled-components";
-export const SidebarContainer = styled.div`
-  height: 100vh;
-  background-color: #333;
-  transition: width 0.3s;
-  width: ${(props) => (props.isOpen ? "200px" : "60px")};
+
+export const NavbarContainer = styled.div`
+  width: 100%;
+  height: 60px;
+  background: rgba(0, 0, 0, 0.7); /* preto com transparência */
+  border-bottom: 2px solid rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(15px);
+  transition: height 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   position: fixed;
-  left: 0;
   top: 0;
+  left: 0;
+  z-index: 10;
+  padding: 0 20px;
 `;
+
 export const ToggleButton = styled.button`
   width: 30px;
   height: 30px;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.7);
   background: #444;
   color: white;
-  position: absolute;
-  right: -15px;
-  top: 20px;
   border-radius: 50%;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1;
+
+  &:hover {
+    background: #0000; /* Cor ao passar o mouse */
+  }
 `;
+
 export const NavMenu = styled.nav`
-  padding: 20px 0;
   ul {
+    display: flex;
     list-style: none;
     padding: 0;
     margin: 0;
+    gap: 20px;
   }
+
   li {
-    margin: 5px 0;
     &.active a {
       background-color: #444;
+      border-radius: 4px;
     }
   }
+
   a {
     color: white;
     text-decoration: none;
     padding: 10px 15px;
     display: flex;
     align-items: center;
-    gap: 10px;
     transition: background-color 0.3s;
+
     &:hover {
       background-color: #444;
+      border-radius: 4px;
     }
+
     span {
       white-space: nowrap;
-      opacity: ${(props) => (props.isOpen ? 1 : 0)};
-      transition: opacity 0.3s;
     }
   }
 `;

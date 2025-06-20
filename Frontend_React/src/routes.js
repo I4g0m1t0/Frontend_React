@@ -1,47 +1,80 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from 
-'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import Main from "./pages/Main";
 import Login from "./pages/Login";
 import Logout from "./pages/Logout";
 import NotFound from "./pages/NotFound";
-import Register from './pages/Register';
+import Register from "./pages/Register";
 import App from "./pages/App";
-import { isAuthenticated } from "./services/auth";
-import Sidebar from "./components/Sidebar";
 import Products from "./pages/Products";
 import Orders from "./pages/Orders";
 import Categories from "./pages/Categories";
+import { isAuthenticated } from "./services/auth";
+import NavBar from "./components/NavBar";
 
-
-const MainPage = () => <Main />;
-const LoginPage = () => <Login />;
-const LogoutPage = () => <Logout />;
-const NotFoundPage = () => <NotFound />;
-const RegisterPage = () => <Register /> 
-const AppPage = () => {
-    if (!isAuthenticated()) {
-        return <Navigate to="/" replace />;
-    }
-    return <App />;
+const PrivateRoute = ({ children }) => {
+  return isAuthenticated() ? children : <Navigate to="/login" replace />;
 };
 
-const Rotas = () => (
+const Rotas = () => {
+  const auth = isAuthenticated();
+
+  return (
     <Router>
-        <Sidebar/>
-        <Routes>
-            <Route path="/" element={<MainPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/logout" element={<LogoutPage />} />
-            <Route path="/app" element={<AppPage />} />
-            <Route path='/register' element={<Register />} />
-            <Route path='/products' element={<Products />} />
-            <Route path='/categories' element={<Categories />} />
-            <Route path='/orders' element={<Orders />} />
-            <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+      {auth && <NavBar />} {/* só mostra a NavBar se estiver autenticado */}
+
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/logout" element={<Logout />} />
+
+        {/* rotas protegidas */}
+        <Route
+          path="/"
+          element={
+            <PrivateRoute>
+              <Main />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/app"
+          element={
+            <PrivateRoute>
+              <App />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/products"
+          element={
+            <PrivateRoute>
+              <Products />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/categories"
+          element={
+            <PrivateRoute>
+              <Categories />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <PrivateRoute>
+              <Orders />
+            </PrivateRoute>
+          }
+        />
+
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </Router>
-);
+  );
+};
 
 export default Rotas;
