@@ -1,17 +1,16 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
-import Main from "./pages/Main";
-import Login from "./pages/Login";
-import Logout from "./pages/Logout";
-import NotFound from "./pages/NotFound";
-import Register from "./pages/Register";
-import App from "./pages/App";
-import Products from "./pages/Products";
-import Orders from "./pages/Orders";
-import Categories from "./pages/Categories";
-import { isAuthenticated } from "./services/auth";
-import NavBar from "./components/NavBar";
+import NavBar from "../components/NavBar";
+import App from "../pages/App";
+import Categories from "../pages/Categories";
+import Login from "../pages/Login";
+import Logout from "../pages/Logout";
+import Main from "../pages/Main";
+import NotFound from "../pages/NotFound";
+import Orders from "../pages/Orders";
+import Products from "../pages/Products";
+import Register from "../pages/Register";
+import { isAuthenticated } from "../services/auth";
 
 const PrivateRoute = ({ children }) => {
   return isAuthenticated() ? children : <Navigate to="/login" replace />;

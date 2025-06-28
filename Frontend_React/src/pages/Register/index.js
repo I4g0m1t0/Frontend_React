@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import { lockClosedOutline, mailOutline, personOutline } from "ionicons/icons";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
 import {
+  Button,
   Container,
+  ErrorMessage,
   FormBox,
   FormValue,
-  Title,
+  Icon,
   InputBox,
+  Login,
   StyledInput,
   StyledLabel,
-  Icon,
-  Button,
-  Login,
-  ErrorMessage,
+  Title,
 } from "./style"; // Ajuste o caminho conforme necessário
-import { mailOutline, lockClosedOutline, personOutline } from "ionicons/icons";
-import api from "../../services/api";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -29,7 +29,7 @@ const Register = () => {
       return;
     }
     try {
-      await api.post("/users/register", { name: nome, email, password: senha });
+      await api.post("/users/register", { name: nome, email: email, password: senha });
       navigate("/login");
     } catch (err) {
       setError("Houve um problema ao cadastrar. Tente novamente.");

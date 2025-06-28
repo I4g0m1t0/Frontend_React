@@ -1,6 +1,6 @@
-import styled from "styled-components";
 import { IonIcon } from "@ionic/react";
-import backgroundImage from './imagem.jpg';
+import styled from "styled-components";
+import backgroundImage from '../../assets/login-bg.jpg';
 
 export const Container = styled.section`
   display: flex;

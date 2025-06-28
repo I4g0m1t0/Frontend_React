@@ -55,6 +55,7 @@ export const NavMenu = styled.nav`
     text-decoration: none;
     padding: 10px 15px;
     display: flex;
+    gap: 5px;
     align-items: center;
     transition: background-color 0.3s;
 

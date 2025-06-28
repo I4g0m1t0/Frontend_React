@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Container, Title, ModalOverlay, ModalContent } from "./style";
-import api from "../../services/api";
+import React, { useEffect, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
+import api from "../../services/api";
+import { Container, ModalContent, ModalOverlay, Title } from "./style";
 
 const statusMap = {
   "1": "em_preparo",
@@ -48,7 +48,7 @@ const Orders = () => {
       setError("");
       const items = selectedProducts.map((product) => ({
         productId: product.productId || product.produtos_idproduto,
-        quantity: product.quantity || 1,
+        quantity: product.quantity,
       }));
 
       await api.post("/orders", { items });
@@ -97,10 +97,17 @@ const Orders = () => {
     }
   };
 
-  const handleViewOrder = (order) => {
-    setCurrentOrder(order);
+const handleViewOrder = async (order) => {
+  try {
+    const response = await api.get(`/orders/${order.id}`);
+    console.log("Detalhes do pedido:", response.data);
+    setCurrentOrder(response.data);
     setIsModalOpen(true);
-  };
+  } catch (error) {
+    alert("Erro ao buscar detalhes do pedido!");
+    console.error(error);
+  }
+};
 
   return (
     <Container>
@@ -170,24 +177,24 @@ const OrderModal = ({ isOpen, onClose, order }) => {
   const [orderProducts, setOrderProducts] = useState([]);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (isOpen && order && order.products) {
-      setOrderProducts(
-        order.products.map((p) => ({
-          productId: p.id,
-          nome: p.name,
-          valor: p.value,
-          quantity: p.OrderProduct?.quantity || 1,
-          observacao: p.OrderProduct?.observation || "",
-        }))
-      );
-    } else if (isOpen && order && !order.products) {
-      console.warn(
-        "Objeto de pedido não contém a propriedade 'products'. Verifique o backend."
-      );
-      setError("Erro: Produtos do pedido não carregados. Verifique o backend.");
-    }
-  }, [isOpen, order]);
+useEffect(() => {
+  if (isOpen && order && order.products) {
+    setOrderProducts(
+      order.products.map((p) => ({
+        productId: p.id,
+        nome: p.name,
+        valor: p.price, // Corrigido de value para price
+        quantity: p.order_products?.quantity || 1, // Corrigido o nome do campo
+        observacao: p.order_products?.observation || "",
+      }))
+    );
+  } else if (isOpen && order && !order.products) {
+    console.warn(
+      "Objeto de pedido não contém a propriedade 'products'. Verifique o backend."
+    );
+    setError("Erro: Produtos do pedido não carregados. Verifique o backend.");
+  }
+}, [isOpen, order]);
 
   if (!isOpen) return null;
 
@@ -279,6 +286,18 @@ const ProductSelectionModal = ({ onClose, onConfirm }) => {
     );
   };
 
+  const handleQuantityChange = (productId, quantity) => {
+  setSelectedProducts(
+    selectedProducts.map((item) => {
+      if (item.productId === productId) {
+        return { ...item, quantity: Number(quantity) };
+      }
+      return item;
+    })
+  );
+};
+
+
   const handleConfirm = () => {
     if (selectedProducts.length === 0) {
       setError("Selecione pelo menos um produto");
@@ -306,6 +325,7 @@ const ProductSelectionModal = ({ onClose, onConfirm }) => {
                 {product.name} - R$ {product.value}
               </label>
               {selectedProducts.some((p) => p.productId === product.id) && (
+                <>
                 <textarea
                   placeholder="Observações"
                   value={
@@ -316,6 +336,15 @@ const ProductSelectionModal = ({ onClose, onConfirm }) => {
                     handleObservationChange(product.id, e.target.value)
                   }
                 />
+                <input 
+                  type="number" 
+                  min={1}
+                  placeholder="quantidade" 
+                  value={selectedProducts.find(
+                    (p) => p.productId === product.id)?.quantity || 1} 
+                  onChange={e => handleQuantityChange(product.id, e.target.value)}
+                />
+                </>
               )}
             </div>
           ))}

@@ -18,8 +18,10 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Banco de dados: `atividade_js`
+-- Criação do banco de dados: `atividade_js`
 --
+CREATE DATABASE IF NOT EXISTS `atividade_js` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE `atividade_js`;
 
 -- --------------------------------------------------------
 
@@ -52,7 +54,7 @@ CREATE TABLE `orders` (
   `id` int(10) UNSIGNED NOT NULL,
   `userId` int(10) UNSIGNED NOT NULL,
   `createdAt` datetime NOT NULL DEFAULT current_timestamp(),
-  `updatedAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(), -- Corrigido: Adicionado ON UPDATE current_timestamp()
   `status` varchar(20) NOT NULL DEFAULT 'ativo'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -130,21 +132,23 @@ CREATE TABLE `users` (
   `id` int(10) UNSIGNED NOT NULL,
   `name` varchar(100) NOT NULL,
   `email` varchar(150) NOT NULL,
-  `password` varchar(255) NOT NULL
+  `password` varchar(255) NOT NULL,
+  `createdAt` datetime NOT NULL DEFAULT current_timestamp(), -- Adicionado
+  `updatedAt` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp() -- Adicionado
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Despejando dados para a tabela `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `password`) VALUES
-(1, 'João Silva', 'joao@exemplo.com', '$2b$10$/Be7qb7YXDfgNchU98AeAOE72TGSc79wFF84FIu54dpS8Mul7MIz6'),
-(2, 'Iago', 'iago@exemplo.com', '$2b$10$mXKdVRuIIBGU1Qyp1URXjuRgHfI4n5chXeB/WLapa.cOxsQVdnXs.'),
-(3, 'Lucas Silva', 'lucas@exemplo.com', '$2b$10$wEmAN555OO8UBuzIysDWZeA9sFMYHQYpLNcaFa1lw4Yscf6d/.baO'),
-(4, 'joao', 'joao@teste.com', '$2b$10$b5jnGm4rXtW.LBQEZcMf3uZb9SJtsPSXcbaUo.e0kmUFIyir4rdUm'),
-(5, 'Iago', '1@gmail.com', '$2b$10$UlAYek7kldrPMOMNUEZ.OuhPx1BnEyCbZ4HumhDThp65vq9003FFO'),
-(6, 'aaa', 'aa@d', '$2b$10$CjZrc41CnjvM6h.UGytfOu51p.gvHXNm9fB9HxsERnSttj9t9mDZK'),
-(7, 'Eduardo Jhonathan Passos Neumann', 'eduardoneumannpb@gmail.com', '$2b$10$PWqlEWx.fYI/DVZS90UCRecZ0OWcMsfgg65oFh6XxzjyV6.jixEHy');
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `createdAt`, `updatedAt`) VALUES
+(1, 'João Silva', 'joao@exemplo.com', '$2b$10$/Be7qb7YXDfgNchU98AeAOE72TGSc79wFF84FIu54dpS8Mul7MIz6', '2025-06-20 00:00:00', '2025-06-20 00:00:00'),
+(2, 'Iago', 'iago@exemplo.com', '$2b$10$mXKdVRuIIBGU1Qyp1URXjuRgHfI4n5chXeB/WLapa.cOxsQVdnXs.', '2025-06-20 00:00:00', '2025-06-20 00:00:00'),
+(3, 'Lucas Silva', 'lucas@exemplo.com', '$2b$10$wEmAN555OO8UBuzIysDWZeA9sFMYHQYpLNcaFa1lw4Yscf6d/.baO', '2025-06-20 00:00:00', '2025-06-20 00:00:00'),
+(4, 'joao', 'joao@teste.com', '$2b$10$b5jnGm4rXtW.LBQEZcMf3uZb9SJtsPSXcbaUo.e0kmUFIyir4rdUm', '2025-06-20 00:00:00', '2025-06-20 00:00:00'),
+(5, 'Iago', '1@gmail.com', '$2b$10$UlAYek7kldrPMOMNUEZ.OuhPx1BnEyCbZ4HumhDThp65vq9003FFO', '2025-06-20 00:00:00', '2025-06-20 00:00:00'),
+(6, 'aaa', 'aa@d', '$2b$10$CjZrc41CnjvM6h.UGytfOu51p.gvHXNm9fB9HxsERnSttj9t9mDZK', '2025-06-20 00:00:00', '2025-06-20 00:00:00'),
+(7, 'Eduardo Jhonathan Passos Neumann', 'eduardoneumannpb@gmail.com', '$2b$10$PWqlEWx.fYI/DVZS90UCRecZ0OWcMsFh6XxzjyV6.jixEHy', '2025-06-20 00:00:00', '2025-06-20 00:00:00');
 
 --
 -- Índices para tabelas despejadas
