@@ -1,44 +1,45 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
-import api from "../../services/api";
 import styled from "styled-components";
-
+import api from "../../services/api";
+ 
 // Usando transient prop $isOpen para evitar warnings no console
-const Container = styled.div
-padding: 20px;
-;
-
-const ModalOverlay = styled.div
-position: fixed;
-top: 0;
-left: 0;
-width: 100 %;
-height: 100 %;
-background - color: rgba(0, 0, 0, 0.5);
-display: ${ ({ $isOpen }) => ($isOpen ? "flex" : "none") };
-justify - content: center;
-align - items: center;
-z - index: 1000;
-;
-
-const ModalContent = styled.div
-background - color: white;
-padding: 20px;
-border - radius: 8px;
-max - width: 600px;
-width: 90 %;
-;
-
-const Title = styled.h1
-margin - bottom: 20px;
-;
-
+export const Container = styled.div`
+  padding: 20px;
+`;
+ 
+export const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: ${({ $isOpen }) => ($isOpen ? "flex" : "none")};
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+ 
+export const ModalContent = styled.div`
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 600px;
+  width: 90%;
+`;
+ 
+export const Title = styled.h1`
+  margin-bottom: 20px;
+`;
+ 
+ 
 const statusMap = {
   "1": "em_preparo",
   "2": "pronto",
   "3": "entregue",
 };
-
+ 
 const statusText = {
   ativo: "Ativo",
   em_preparo: "Em Preparo",
@@ -46,18 +47,18 @@ const statusText = {
   entregue: "Entregue",
   cancelado: "Cancelado",
 };
-
+ 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentOrder, setCurrentOrder] = useState(null);
   const [error, setError] = useState("");
   const [showProductSelection, setShowProductSelection] = useState(false);
-
+ 
   useEffect(() => {
     loadOrders();
   }, []);
-
+ 
   const loadOrders = async () => {
     try {
       const response = await api.get("/orders/");
@@ -67,12 +68,12 @@ const Orders = () => {
       console.error("Erro ao carregar pedidos:", err);
     }
   };
-
+ 
   const handleCreateOrder = () => {
     setError("");
     setShowProductSelection(true);
   };
-
+ 
   const handleProductSelectionConfirm = async (selectedProducts) => {
     try {
       setError("");
@@ -80,9 +81,9 @@ const Orders = () => {
         productId: product.productId || product.produtos_idproduto,
         quantity: product.quantity,
       }));
-
+ 
       await api.post("/orders", { items });
-
+ 
       setShowProductSelection(false);
       await loadOrders();
     } catch (err) {
@@ -90,12 +91,12 @@ const Orders = () => {
       console.error("Erro ao criar pedido com produtos:", err);
     }
   };
-
+ 
   const handleDeleteOrder = async (id) => {
     if (window.confirm("Tem certeza que deseja excluir este pedido?")) {
       try {
         setError("");
-        await api.delete(/orders/${ id });
+        await api.delete(`/orders/${ id }`);
         setOrders((prev) => prev.filter((order) => order.id !== id));
       } catch (err) {
         setError("Erro ao excluir pedido");
@@ -103,7 +104,7 @@ const Orders = () => {
       }
     }
   };
-
+ 
   const handleUpdateStatus = async (id, statusCode) => {
     try {
       setError("");
@@ -112,9 +113,9 @@ const Orders = () => {
         setError("Status inválido");
         return;
       }
-
-      const response = await api.patch(/orders/${ id } / status, { status });
-
+ 
+      const response = await api.patch(`/orders/${ id } / status, { status }`);
+ 
       const updatedOrder = response.data;
       setOrders((prevOrders) =>
         prevOrders.map((order) => (order.id === id ? updatedOrder : order))
@@ -124,10 +125,10 @@ const Orders = () => {
       console.error("Erro ao atualizar status do pedido:", err);
     }
   };
-
+ 
   const handleViewOrder = async (order) => {
     try {
-      const response = await api.get(/orders/${ order.id });
+      const response = await api.get(`/orders/${ order.id }`);
       setCurrentOrder(response.data);
       setIsModalOpen(true);
     } catch (error) {
@@ -135,7 +136,7 @@ const Orders = () => {
       console.error(error);
     }
   };
-
+ 
   return (
     <Container>
       <Title>Gerenciamento de Pedidos</Title>
@@ -183,14 +184,14 @@ const Orders = () => {
           ))}
         </tbody>
       </table>
-
+ 
       {showProductSelection && (
         <ProductSelectionModal
           onClose={() => setShowProductSelection(false)}
           onConfirm={handleProductSelectionConfirm}
         />
       )}
-
+ 
       <OrderModal
         $isOpen={isModalOpen}
         isOpen={isModalOpen}
@@ -200,11 +201,11 @@ const Orders = () => {
     </Container>
   );
 };
-
+ 
 const OrderModal = ({ $isOpen, isOpen, onClose, order }) => {
   const [orderProducts, setOrderProducts] = useState([]);
   const [error, setError] = useState("");
-
+ 
   useEffect(() => {
     if (isOpen && order && order.products) {
       setOrderProducts(
@@ -223,9 +224,9 @@ const OrderModal = ({ $isOpen, isOpen, onClose, order }) => {
       setError("Erro: Produtos do pedido não carregados. Verifique o backend.");
     }
   }, [isOpen, order]);
-
+ 
   if (!$isOpen) return null;
-
+ 
   return (
     <ModalOverlay $isOpen={$isOpen}>
       <ModalContent>
@@ -265,16 +266,16 @@ const OrderModal = ({ $isOpen, isOpen, onClose, order }) => {
     </ModalOverlay>
   );
 };
-
+ 
 const ProductSelectionModal = ({ onClose, onConfirm }) => {
   const [products, setProducts] = useState([]);
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [error, setError] = useState("");
-
+ 
   useEffect(() => {
     loadProducts();
   }, []);
-
+ 
   const loadProducts = async () => {
     try {
       const response = await api.get("/products");
@@ -284,7 +285,7 @@ const ProductSelectionModal = ({ onClose, onConfirm }) => {
       console.error("Erro ao carregar produtos:", err);
     }
   };
-
+ 
   const handleProductSelect = (product) => {
     const existingProduct = selectedProducts.find(
       (p) => p.productId === product.id
@@ -304,7 +305,7 @@ const ProductSelectionModal = ({ onClose, onConfirm }) => {
       ]);
     }
   };
-
+ 
   const handleObservationChange = (productId, observation) => {
     setSelectedProducts(
       selectedProducts.map((item) => {
@@ -315,7 +316,7 @@ const ProductSelectionModal = ({ onClose, onConfirm }) => {
       })
     );
   };
-
+ 
   const handleQuantityChange = (productId, quantity) => {
     setSelectedProducts(
       selectedProducts.map((item) => {
@@ -326,7 +327,7 @@ const ProductSelectionModal = ({ onClose, onConfirm }) => {
       })
     );
   };
-
+ 
   const handleConfirm = () => {
     if (selectedProducts.length === 0) {
       setError("Selecione pelo menos um produto");
@@ -334,7 +335,7 @@ const ProductSelectionModal = ({ onClose, onConfirm }) => {
     }
     onConfirm(selectedProducts);
   };
-
+ 
   return (
     <ModalOverlay $isOpen={true}>
       <ModalContent>
@@ -390,5 +391,5 @@ const ProductSelectionModal = ({ onClose, onConfirm }) => {
     </ModalOverlay>
   );
 };
-
+ 
 export default Orders;

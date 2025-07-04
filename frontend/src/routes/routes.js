@@ -5,9 +5,10 @@ import {
   Routes,
 } from "react-router-dom";
 
-import NavBar from "../components/NavBar";
+import Layout from "../components/layout";
 import App from "../pages/App";
 import Categories from "../pages/Categories";
+import Dashboard from "../pages/Dashboard";
 import Login from "../pages/Login";
 import Logout from "../pages/Logout";
 import Main from "../pages/Main";
@@ -15,7 +16,6 @@ import NotFound from "../pages/NotFound";
 import Orders from "../pages/Orders";
 import Products from "../pages/Products";
 import Register from "../pages/Register";
-import Dashboard from "../pages/Dashboard";
 import { isAuthenticated } from "../services/auth";
 
 const PrivateRoute = ({ children }) => {
@@ -27,13 +27,9 @@ const Rotas = () => {
 
   return (
     <Router>
-      {auth && <NavBar />} {/* só mostra a NavBar se estiver autenticado */}
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/logout" element={<Logout />} />
-
-        {/* rotas protegidas */}
+        <Route path="/" element={<Layout />}>
+                {/* rotas protegidas */}
         <Route
           path="/"
           element={
@@ -82,6 +78,10 @@ const Rotas = () => {
             </PrivateRoute>
           }
         />
+        </Route>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/logout" element={<Logout />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
