@@ -37,6 +37,8 @@ router.use(auth);
  *                       type: integer
  *                     quantity:
  *                       type: integer
+ *                     observation:
+ *                       type: string
  *     responses:
  *       '201':
  *         description: Pedido criado

@@ -1,24 +1,34 @@
-// models/orderProducts.js
 const { db, Sequelize } = require('../config/database');
 
-const OrderProducts = db.define('order_products', {
+// Tabela intermediária entre Pedidos e Produtos
+const OrderProduct = db.define('order_products', {
   orderId: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.INTEGER.UNSIGNED,
+    allowNull: false,
     primaryKey: true,
-    references: { model: 'orders',   key: 'id' }
+    references: { model: 'orders', key: 'id' },
+    field: 'orderId'
   },
   productId: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.INTEGER.UNSIGNED,
+    allowNull: false,
     primaryKey: true,
-    references: { model: 'products', key: 'id' }
+    references: { model: 'products', key: 'id' },
+    field: 'productId'
   },
   quantity: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.INTEGER.UNSIGNED,
     allowNull: false,
     defaultValue: 1
+  },
+  observation: {
+    type: Sequelize.TEXT,
+    allowNull: true
   }
 }, {
-  freezeTableName: true
+  tableName: 'order_products',
+  freezeTableName: true,
+  timestamps: true
 });
 
-module.exports = OrderProducts;
+module.exports = OrderProduct;

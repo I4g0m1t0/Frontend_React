@@ -28,7 +28,7 @@ const options = {
       }
     ]
   },
-  apis: ['./src/routes/*.js', './src/controllers/*.js'] // caminhos para comentários JSDoc
+  apis: ['./src/routes/*.js'] // caminhos para comentários JSDoc
 };
 
 const swaggerSpec = swaggerJSDoc(options);
