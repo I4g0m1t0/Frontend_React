@@ -1,4 +1,9 @@
-import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
 
 import NavBar from "../components/NavBar";
 import App from "../pages/App";
@@ -10,6 +15,7 @@ import NotFound from "../pages/NotFound";
 import Orders from "../pages/Orders";
 import Products from "../pages/Products";
 import Register from "../pages/Register";
+import Dashboard from "../pages/Dashboard";
 import { isAuthenticated } from "../services/auth";
 
 const PrivateRoute = ({ children }) => {
@@ -22,7 +28,6 @@ const Rotas = () => {
   return (
     <Router>
       {auth && <NavBar />} {/* só mostra a NavBar se estiver autenticado */}
-
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -69,7 +74,14 @@ const Rotas = () => {
             </PrivateRoute>
           }
         />
-
+        <Route
+          path="/dashboard"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>

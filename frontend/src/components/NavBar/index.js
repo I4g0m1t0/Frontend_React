@@ -47,8 +47,8 @@ const NavBar = () => {
             </>
           ) : (
             <>
-              <li className={isActive("/app") ? "active" : ""}>
-                <Link to="/app">
+              <li className={isActive("/dashboard") ? "active" : ""}>
+                <Link to="/dashboard">
                   <AiOutlineDashboard size={20} />
                   {isOpen && <span>Dashboard</span>}
                 </Link>
